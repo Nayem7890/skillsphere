@@ -1,11 +1,11 @@
 // src/pages/AddCourse.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import axios from "axios";
 import toast from "react-hot-toast";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useAuth } from "../Providers/AuthProvider";
+import api from "../api/api"; 
 
 const CATEGORIES = [
   "Web Development",
@@ -43,7 +43,10 @@ const AddCourse = () => {
 
   const onChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const removeImage = () => {
@@ -52,6 +55,12 @@ const AddCourse = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      toast.error("Please login to add a course");
+      navigate("/login", { replace: true, state: { from: "/dashboard/add-course" } });
+      return;
+    }
 
     // --- client-side validation ---
     const priceNum = Number(formData.price);
@@ -62,15 +71,16 @@ const AddCourse = () => {
     if (!formData.category) return toast.error("Select a category");
     if (!formData.description.trim()) return toast.error("Description is required");
     if (Number.isNaN(priceNum) || priceNum < 0) return toast.error("Invalid price");
-    if (Number.isNaN(durationNum) || durationNum <= 0) return toast.error("Invalid duration (hours)");
+    if (Number.isNaN(durationNum) || durationNum <= 0)
+      return toast.error("Invalid duration (hours)");
 
     // --- payload matching your MongoDB schema ---
     const now = new Date().toISOString();
     const payload = {
       title: formData.title.trim(),
       imageUrl: formData.imageUrl.trim(),
-      price: priceNum,           // number
-      duration: durationNum,     // number (hours)
+      price: priceNum, // number
+      duration: durationNum, // number (hours)
       category: formData.category,
       description: formData.description.trim(),
       isFeatured: !!formData.isFeatured,
@@ -89,27 +99,61 @@ const AddCourse = () => {
 
     try {
       setLoading(true);
-      const base = import.meta.env.VITE_API_URL || "http://localhost:3000";
-      await axios.post(`${base}/courses`, payload);
+      // ✅ use api instance (it already attaches Authorization header)
+      await api.post("/courses", payload);
       toast.success("Course added successfully!");
       navigate("/dashboard/my-courses");
     } catch (err) {
-      const msg = err?.response?.data?.message || "Failed to add course";
+      const msg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "Failed to add course";
       toast.error(msg);
     } finally {
       setLoading(false);
     }
   };
 
+  // Optional: If user somehow reaches this page without being logged in
+  if (!user) {
+    return (
+      <div className="min-h-[60vh] grid place-items-center text-center">
+        <div>
+          <p className="text-lg opacity-80 mb-4">
+            Please log in to add a new course.
+          </p>
+          <button
+            className="btn btn-primary"
+            onClick={() =>
+              navigate("/login", {
+                replace: true,
+                state: { from: "/dashboard/add-course" },
+              })
+            }
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-base-100">
       <div className="py-8">
         <div className="container mx-auto px-4 max-w-3xl">
-          <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center" data-aos="fade-up">
+          <h1
+            className="text-3xl md:text-4xl font-bold mb-6 text-center"
+            data-aos="fade-up"
+          >
             Add New Course
           </h1>
 
-          <form onSubmit={handleSubmit} className="card bg-base-200 shadow-xl p-6" data-aos="fade-up">
+          <form
+            onSubmit={handleSubmit}
+            className="card bg-base-200 shadow-xl p-6"
+            data-aos="fade-up"
+          >
             <div className="space-y-4">
               {/* Title */}
               <div>
@@ -144,9 +188,17 @@ const AddCourse = () => {
                 {formData.imageUrl && (
                   <div className="mt-2 flex items-center gap-3">
                     <div className="w-24 h-24 bg-base-300 rounded overflow-hidden">
-                      <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                      <img
+                        src={formData.imageUrl}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                    <button type="button" className="btn btn-ghost btn-sm" onClick={removeImage}>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm"
+                      onClick={removeImage}
+                    >
                       Remove
                     </button>
                   </div>
@@ -250,7 +302,11 @@ const AddCourse = () => {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
                   {loading ? (
                     <>
                       <span className="loading loading-spinner loading-sm" />
@@ -265,7 +321,8 @@ const AddCourse = () => {
               {/* Instructor autofill note */}
               <div className="mt-2 text-xs opacity-60">
                 Instructor info will be auto-filled from your profile:{" "}
-                <strong>{user?.displayName || "Unknown"}</strong> ({user?.email || "no email"})
+                <strong>{user?.displayName || "Unknown"}</strong> (
+                {user?.email || "no email"})
               </div>
             </div>
           </form>
