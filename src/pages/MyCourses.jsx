@@ -1,6 +1,6 @@
+// src/pages/MyCourses.jsx
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { motion } from "framer-motion";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -119,43 +119,31 @@ export default function MyCourses() {
     });
   }, [courses, search, sort]);
 
+  // --- Auth guard ---
   if (!user?.email) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="min-h-[60vh] grid place-items-center"
-      >
+      <div className="min-h-[60vh] grid place-items-center">
         <div className="text-center">
           <p className="opacity-70 mb-3">Please log in to view your courses.</p>
           <Link to="/login" className="btn btn-primary">
             Go to Login
           </Link>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
+  // --- Loading skeleton ---
   if (isLoading) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="py-8 container mx-auto px-4"
-      >
+      <div className="py-8 container mx-auto px-4">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
           <div className="skeleton h-10 w-48" />
           <div className="skeleton h-10 w-36" />
         </div>
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="card bg-base-200 shadow"
-            >
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="card bg-base-200 shadow">
               <div className="skeleton w-full h-48" />
               <div className="card-body">
                 <div className="skeleton h-6 w-3/4" />
@@ -167,20 +155,17 @@ export default function MyCourses() {
                   <div className="skeleton h-9 w-20" />
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
-      </motion.div>
+      </div>
     );
   }
 
+  // --- Error state ---
   if (isError) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="min-h-[60vh] grid place-items-center"
-      >
+      <div className="min-h-[60vh] grid place-items-center">
         <div className="card bg-base-200 shadow p-6 text-center">
           <h2 className="text-lg font-semibold mb-2">
             Failed to load your courses.
@@ -189,23 +174,16 @@ export default function MyCourses() {
             Try again
           </button>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
+  // --- Main content ---
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="py-8"
-    >
+    <div className="py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+        <div
           data-aos="fade-up"
           className="flex flex-col gap-4 mb-6"
         >
@@ -243,16 +221,14 @@ export default function MyCourses() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 className="btn btn-ghost join-item"
                 onClick={() => setSearch("")}
                 disabled={!search}
                 title="Clear"
               >
                 ✕
-              </motion.button>
+              </button>
             </div>
 
             <select
@@ -271,19 +247,17 @@ export default function MyCourses() {
               <option value="rating:asc">Rating: Low → High</option>
             </select>
           </div>
-        </motion.div>
+        </div>
 
         {/* Results Count */}
         {filteredSorted.length > 0 && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+          <p
             className="text-sm opacity-70 mb-4"
             data-aos="fade-up"
           >
             Showing {filteredSorted.length} course
             {filteredSorted.length !== 1 ? "s" : ""}
-          </motion.p>
+          </p>
         )}
 
         {/* Grid */}
@@ -305,26 +279,17 @@ export default function MyCourses() {
               const src = imageUrl || image || FALLBACK_IMG;
 
               return (
-                <motion.div
+                <div
                   key={_id}
                   data-aos="fade-up"
                   data-aos-delay={i * 80}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                  className="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow"
+                  className="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-200 hover:-translate-y-1"
                 >
                   <figure className="relative">
                     {isFeatured && (
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="badge badge-secondary absolute top-3 left-3 z-10"
-                      >
+                      <span className="badge badge-secondary absolute top-3 left-3 z-10">
                         Featured
-                      </motion.span>
+                      </span>
                     )}
                     <img
                       src={src}
@@ -342,7 +307,9 @@ export default function MyCourses() {
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mt-3">
                       <div className="flex items-center gap-2 flex-wrap">
                         {category && (
-                          <span className="badge badge-primary">{category}</span>
+                          <span className="badge badge-primary">
+                            {category}
+                          </span>
                         )}
                         {duration != null && (
                           <span className="badge">{fmtDur(duration)}</span>
@@ -354,46 +321,39 @@ export default function MyCourses() {
                     </div>
 
                     <div className="card-actions justify-end gap-2 mt-4 flex-wrap">
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Link
-                          to={`/courses/${_id}`}
-                          className="btn btn-sm btn-outline"
-                        >
-                          View
-                        </Link>
-                      </motion.div>
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <button
-                          onClick={() => navigate(`/dashboard/update-course/${_id}`)}
-                          className="btn btn-sm btn-primary"
-                        >
-                          Update
-                        </button>
-                      </motion.div>
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <button
-                          onClick={() => handleDelete(_id)}
-                          className="btn btn-sm btn-error"
-                          disabled={deleteMutation.isPending}
-                        >
-                          {deleteMutation.isPending ? (
-                            <span className="loading loading-spinner loading-xs" />
-                          ) : (
-                            "Delete"
-                          )}
-                        </button>
-                      </motion.div>
+                      <Link
+                        to={`/courses/${_id}`}
+                        className="btn btn-sm btn-outline"
+                      >
+                        View
+                      </Link>
+                      <button
+                        onClick={() =>
+                          navigate(`/dashboard/update-course/${_id}`)
+                        }
+                        className="btn btn-sm btn-primary"
+                      >
+                        Update
+                      </button>
+                      <button
+                        onClick={() => handleDelete(_id)}
+                        className="btn btn-sm btn-error"
+                        disabled={deleteMutation.isPending}
+                      >
+                        {deleteMutation.isPending ? (
+                          <span className="loading loading-spinner loading-xs" />
+                        ) : (
+                          "Delete"
+                        )}
+                      </button>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
+          <div
             className="text-center py-16"
             data-aos="fade-up"
           >
@@ -420,9 +380,9 @@ export default function MyCourses() {
                 </Link>
               )}
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }

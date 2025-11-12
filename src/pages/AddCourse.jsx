@@ -102,7 +102,7 @@ const AddCourse = () => {
   };
 
   return (
-    <div className="bg-violet-100">
+    <div className="bg-base-100">
       <div className="py-8">
         <div className="container mx-auto px-4 max-w-3xl">
           <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center" data-aos="fade-up">
