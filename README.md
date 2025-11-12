@@ -4,7 +4,7 @@ Live Site: <>
 
 Server(API) URL: <>
 
-SkillSphere is a full-stack online learning platform where instructors can share courses and learners can explore, filter, enroll, and manage their learning—built with React, Express, and MongoDB (native driver, no Mongoose).
+SkillSphere is a full-stack online learning platform where instructors can share courses and learners can explore, filter, enroll, and manage their learning—built with React, Express, and MongoDB (native driver).
 
 ✨ Features
 
