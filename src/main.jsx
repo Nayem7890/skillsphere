@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import NotFound from './pages/NotFound';
 import MainLayout from './Layouts/MainLayout';
@@ -28,9 +28,9 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <NotFound />,
     children: [
-      { index: true, 
-        element: <Home /> 
-      },
+      { index: true, element: <Home /> },
+      
+      { path: 'home', element: <Navigate to="/" replace /> },
       { path: "courses", 
         element: <AllCourses />,
         loader: () => fetch('http://localhost:3000/courses')

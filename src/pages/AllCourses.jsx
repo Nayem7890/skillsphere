@@ -1,6 +1,8 @@
-// src/pages/AllCourses.jsx
 import React, { useMemo, useState, useEffect } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
+import { motion } from "framer-motion";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import CourseCard from "./CourseCard";
 
 const normalize = (data) => {
@@ -16,7 +18,6 @@ const sortOptions = [
   { value: "duration:desc", label: "Duration: Long → Short" },
   { value: "rating:desc", label: "Rating: High → Low" },
   { value: "rating:asc", label: "Rating: Low → High" },
-  
 ];
 
 const AllCourses = () => {
@@ -33,6 +34,11 @@ const AllCourses = () => {
       : "createdAt:desc"
   );
   const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    document.title = "All Courses - SkillSphere";
+    AOS.init({ duration: 800, once: true, offset: 100 });
+  }, []);
 
   // Keep input & sort in sync if URL changes externally
   useEffect(() => {
@@ -112,52 +118,93 @@ const AllCourses = () => {
   };
 
   return (
-    <div className="bg-violet-50">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="bg-violet-50"
+    >
       {/* header */}
-      <section className="rounded-2xl mx-3 md:mx-6 hero-soft">
+      <motion.section
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="rounded-2xl mx-3 md:mx-6 hero-soft"
+        data-aos="fade-up"
+      >
         <div className="py-8 md:py-10 text-center">
-          <h1 className="text-3xl md:text-4xl font-extrabold">
+          <motion.h1
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="text-3xl md:text-4xl font-extrabold"
+          >
             All <span className="text-primary">Courses</span>
-          </h1>
-          <p className="mt-2 opacity-80">
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="mt-2 opacity-80"
+          >
             {sorted.length
               ? `${sorted.length} course${sorted.length > 1 ? "s" : ""} found`
               : "Browse our catalog of expert-led content"}
-          </p>
+          </motion.p>
         </div>
-      </section>
+      </motion.section>
 
       <div className="container mx-auto px-4 md:px-6 pb-10 pt-6">
         {/* minimal toolbar */}
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          data-aos="fade-up"
+          className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+        >
           {/* search input + buttons */}
           <div className="join w-full md:w-auto">
-            <input
+            <motion.input
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
               type="text"
               className="input input-bordered join-item w-full md:w-96"
               placeholder="Search courses…"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
             />
-            <button className="btn btn-primary join-item" disabled>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="btn btn-primary join-item"
+              disabled
+            >
               {isSearching ? (
                 <span className="loading loading-spinner loading-sm" />
               ) : (
                 "Search"
               )}
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className="btn btn-ghost join-item"
               onClick={clearSearch}
               disabled={!searchParams.get("search") && !searchInput}
               title="Clear search"
             >
               ✕
-            </button>
+            </motion.button>
           </div>
 
           {/* sort */}
-          <select
+          <motion.select
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            whileHover={{ scale: 1.02 }}
             className="select select-bordered w-full md:w-56"
             value={sortValue}
             onChange={(e) => handleSortChange(e.target.value)}
@@ -167,15 +214,25 @@ const AllCourses = () => {
                 {o.label}
               </option>
             ))}
-          </select>
-        </div>
+          </motion.select>
+        </motion.div>
 
         {/* grid */}
         {isSearching ? (
-          // simple skeletons while debouncing/“searching”
-          <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          // simple skeletons while debouncing/"searching"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          >
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="card bg-base-200 shadow-md animate-pulse">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.1 }}
+                className="card bg-base-200 shadow-md animate-pulse"
+              >
                 <div className="h-48 bg-base-300" />
                 <div className="card-body">
                   <div className="h-4 bg-base-300 rounded w-3/4" />
@@ -186,28 +243,40 @@ const AllCourses = () => {
                     <div className="h-6 w-12 bg-base-300 rounded" />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : sorted.length ? (
           <div className="mt-6 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {sorted.map((course) => (
-              <div
+            {sorted.map((course, index) => (
+              <motion.div
                 key={course._id}
-                className="transition-transform duration-200 hover:-translate-y-2"
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="transition-transform duration-200"
               >
                 <CourseCard course={course} />
-              </div>
+              </motion.div>
             ))}
           </div>
         ) : (
-          <div className="mt-12 text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="mt-12 text-center"
+          >
             <div className="text-2xl font-semibold">No courses found</div>
             <p className="opacity-70 mt-2">Try a different search.</p>
-          </div>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
