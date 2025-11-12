@@ -8,6 +8,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useAuth } from "../Providers/AuthProvider";
 
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
 });

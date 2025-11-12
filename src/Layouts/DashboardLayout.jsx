@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink, Outlet, useLocation, Link } from "react-router";
 import { useAuth } from "../Providers/AuthProvider";
 
 const DashboardLayout = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
+
+    useEffect(() => {
+    const saved = localStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", saved);
+  }, []);
 
   const menuItems = [
     { path: "/dashboard/add-course", label: "Add Course", icon: "➕" },
