@@ -1,6 +1,6 @@
 // src/pages/AddCourse.jsx
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router"; // ✅ correct import
+import { useNavigate } from "react-router";
 import axios from "axios";
 import toast from "react-hot-toast";
 import AOS from "aos";

@@ -16,7 +16,7 @@ const DashboardLayout = () => {
     menuItems.find((m) => m.path === location.pathname)?.label || "Dashboard";
 
   return (
-    <div className="min-h-screen bg-base-100">
+    <div className="min-h-screen bg-violet-100">
       <div className="drawer lg:drawer-open">
         <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
 

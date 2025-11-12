@@ -1,42 +1,91 @@
+/* ---- Global canvas ---- */
+:root {
+  --bg-from: 255 247 237;  /* amber-50 */
+  --bg-to:   237 233 254;  /* violet-50 */
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  /* subtle diagonal gradient like your Register page vibe */
+  background: linear-gradient(
+      135deg,
+      rgb(var(--bg-from)) 0%,
+      rgb(var(--bg-to)) 100%
+  );
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove Vite's center/width constraints */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* ---- Nice, reusable helpers (play well with Tailwind/DaisyUI) ---- */
+
+/* Soft hero background used in AllCourses + Home */
+.hero-soft {
+  /* glassy panel with a gentle pattern */
+  background:
+    radial-gradient(1200px 600px at 0% 0%, rgba(99,102,241,0.08), transparent 60%),
+    radial-gradient(800px 400px at 100% 0%, rgba(236,72,153,0.08), transparent 60%),
+    linear-gradient(135deg, rgba(255,255,255,0.65), rgba(255,255,255,0.4));
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0,0,0,0.04);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Card hover micro-interaction */
+.card-hover {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Category badge look */
+.x-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .375rem;
+  font-size: .75rem;
+  padding: .25rem .5rem;
+  border-radius: 9999px;
+  background: rgba(99,102,241,.08); /* indigo */
+  color: rgb(67 56 202);            /* indigo-700 */
+  border: 1px solid rgba(99,102,241,.15);
 }
 
-.card {
-  padding: 2em;
+/* Text balance for nicer headings */
+.text-balance {
+  text-wrap: balance;
 }
 
-.read-the-docs {
-  color: #888;
+/* Subtle fade-in you can add as className="fade-in" */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fade-in .35s ease both;
+}
+
+/* Minimal scrollbar polish (Chromium/Edge) */
+*::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.15);
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,.25);
 }
