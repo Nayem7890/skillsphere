@@ -367,7 +367,7 @@ export default function MyCourses() {
                           onClick={() => navigate(`/dashboard/update-course/${_id}`)}
                           className="btn btn-sm btn-primary"
                         >
-                          Edit
+                          Update
                         </button>
                       </motion.div>
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
