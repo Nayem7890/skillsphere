@@ -7,7 +7,7 @@ SkillSphere is a full-stack online learning platform that connects instructors a
 ## Visuals
 
 ### 🏠 Home Page
-![Home Page Screenshot](https://raw.githubusercontent.com/Nayem7890/hero-apps/main/public/skillsphere.png)
+![Home Page Screenshot](https://raw.githubusercontent.com/Nayem7890/skillsphere/main/public/skillsphere.png)
 
 
 ## Tech Stack
